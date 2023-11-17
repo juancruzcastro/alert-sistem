@@ -18,4 +18,7 @@ Se agregó algunos test unitarios. El sistema valida que:
 1. Se registren usuarios correctamente.
 2. Se registren temas correctamente.
 3. Un usuario pueda agregar temas de interes. Si el usuario no existe arroja error.
-4. Se envien alertas correctamente. Si el tema o el usuario no existe arroja error.
+4. Enviar alertas para todos correctamente.
+5. Enviar alertas a un usuario particular correctamente.
+6. Si el alerta de un tema no existe arroja error.
+7. Si el alerta para un usuario no existe arroja error.
