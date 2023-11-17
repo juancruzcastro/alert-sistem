@@ -27,7 +27,7 @@ public class Main {
         sistema.enviarAlerta("Música", "Suscribete ahora a YouTube Premium", "21/12/2023 15:50", TipoAlerta.INFORMATIVA);
         sistema.enviarAlerta("Cumpleaños", "Cumpleaños de papá", "09/10/2024 07:20", TipoAlerta.URGENTE, "Usuario2");
         sistema.enviarAlerta("Deporte", "Batacazo en la bombonera", "17/11/2023 10:00", TipoAlerta.INFORMATIVA);
-
+        
         List<Alerta> alertasNoLeidasDeUsuario1 = sistema.obtenerAlertasNoLeidasDe("Usuario1");
         List<Alerta> alertasNoLeidasDeUsuario2 = sistema.obtenerAlertasNoLeidasDe("Usuario2");
         List<Alerta> alertasDeCine = sistema.obtenerAlertasDe("Cine");

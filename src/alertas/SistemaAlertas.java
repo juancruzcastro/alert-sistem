@@ -26,11 +26,17 @@ public class SistemaAlertas {
     }
     
     public void agregarTemaInteres(String user, String tema) {
+    	boolean usuarioEncontrado = false;
     	for(Usuario usuario : usuarios) {
-    		if(usuario.es(user)) {
+    		usuarioEncontrado |= usuario.getNombre().equals(user);
+			
+			if(usuarioEncontrado) {
     			usuario.agregarTemaInteres(tema);
-    			break; // encontró al usuario, ya no necesita recorrer
     		}
+    	}
+    	
+    	if(!usuarioEncontrado) {
+    		throw new RuntimeException("El usuario fue encontrado, pero la alerta no corresponde con sus temas de interés.");
     	}
     }
     
@@ -41,22 +47,25 @@ public class SistemaAlertas {
     
     public void enviarAlerta(String tema, String mensaje, String fechaExpiracion, TipoAlerta tipo, String usuario) {
     	boolean usuarioEncontrado = false;
+    	Usuario elUsuarioEs = new Usuario();
     	for(Usuario user : usuarios) {
 			usuarioEncontrado |= user.getNombre().equals(usuario);
 			
 			if(usuarioEncontrado) {
-				Alerta alerta = new Alerta(tema, mensaje, fechaExpiracion, tipo, user);
-				if(user.getTemasInteres().contains(tema)) {
-					alertas.add(alerta);
-	    			user.recibirAlerta(alerta);
-				} else {
-					throw new RuntimeException("El usuario fue encontrado, pero la alerta no corresponde con sus temas de interés.");
-				}
+				elUsuarioEs = user;
 			}
     	}
     	
-    	if(!usuarioEncontrado) {
-    		throw new RuntimeException("El usuario fue encontrado, pero la alerta no corresponde con sus temas de interés.");
+    	if(usuarioEncontrado) {
+    		Alerta alerta = new Alerta(tema, mensaje, fechaExpiracion, tipo, elUsuarioEs);
+			if(elUsuarioEs.getTemasInteres().contains(tema)) {
+				alertas.add(alerta);
+    			elUsuarioEs.recibirAlerta(alerta);
+			} else {
+				throw new RuntimeException("El usuario fue encontrado, pero la alerta no corresponde con sus temas de interés.");
+			}
+    	} else {
+			throw new RuntimeException("El usuario fue encontrado, pero la alerta no corresponde con sus temas de interés.");
     	}
     }
     
