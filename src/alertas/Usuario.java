@@ -14,33 +14,74 @@ public class Usuario {
         this.temasInteres = new ArrayList<>();
         this.alertas = new ArrayList<>();
     }
+    
+    public Usuario() {}
+    
+    public void agregarTemaInteres(String tema) {
+        temasInteres.add(tema);
+    }
+    
+    public boolean es(String usuario) {
+		if(this.nombre.equals(usuario))
+			return true;
+		return false;
+	}
 
     public void recibirAlerta(Alerta alerta) {
         alertas.add(alerta);
     }
+    
+    public String getNombre() {
+		return this.nombre;
+	}
 
     public List<Alerta> obtenerAlertasNoLeidas() {
-        List<Alerta> noLeidas = new ArrayList<>();
+        List<Alerta> noLeidasNoExpiradas = new ArrayList<>();
         for (Alerta alerta : alertas) {
             if (!alerta.isLeida() && !alerta.isExpirada()) {
-                noLeidas.add(alerta);
+            	if(alerta.isParaTodos()) {
+            		if(this.getTemasInteres().contains(alerta.getTema())) {
+            			noLeidasNoExpiradas.add(alerta);
+            		}
+            	} else {
+            		noLeidasNoExpiradas.add(alerta);
+            	}
             }
         }
-        Collections.sort(noLeidas, (a1, a2) -> {
-            if (a1.getTipo() == a2.getTipo()) {
-                return a2.getFechaExpiracion().compareTo(a1.getFechaExpiracion());
-            } else {
-                return a1.getTipo().compareTo(a2.getTipo());
-            }
-        });
-        return noLeidas;
+        ordenarAlertas(noLeidasNoExpiradas);  // Aplicar el ordenamiento
+        return noLeidasNoExpiradas;
     }
 
     public List<Alerta> getAlertas() {
-        return alertas;
+        return this.alertas;
     }
 
 	public List<String> getTemasInteres() {
-		return temasInteres;
+		return this.temasInteres;
 	}
+	/*
+	private void ordenarAlertas(List<Alerta> alertas) {
+        Collections.sort(alertas, (a1, a2) -> {
+            if (a1.getTipo() == TipoAlerta.URGENTE && a2.getTipo() == TipoAlerta.URGENTE) {
+                return Long.compare(a2.getId(), a1.getId());  // LIFO para Urgentes
+            } else if (a1.getTipo() == TipoAlerta.INFORMATIVA && a2.getTipo() == TipoAlerta.INFORMATIVA) {
+                return Long.compare(a1.getId(), a2.getId());  // FIFO para Informativas
+            } else {
+            	// Si los tipos son diferentes, ordenar por tipo (Urgente primero)
+            	return a1.getTipo().ordinal() - a2.getTipo().ordinal();
+            }
+        });
+    }
+	*/
+	private void ordenarAlertas(List<Alerta> alertas) {
+	    Collections.sort(alertas, (a1, a2) -> Long.compare(a2.getId(), a1.getId()));
+	}
+	
+	public void marcarAlertaComoLeida(String notificacion) {
+    	for(Alerta alerta : alertas) {
+    		if(alerta.getMensaje().equals(notificacion)) {
+    			alerta.leida();
+    		}
+    	}
+    }
 }

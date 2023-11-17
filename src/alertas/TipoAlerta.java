@@ -1,6 +1,6 @@
 package alertas;
 
-public enum TipoAlerta {
+enum TipoAlerta {
     INFORMATIVA,
     URGENTE
 }
