@@ -46,14 +46,6 @@ public class SistemaAlertas {
     	user.recibirAlerta(alerta);
     }
     
-    private boolean elUsuarioEsta(String usuario) {
-    	boolean usuarioEncontrado = false;
-    	for(Usuario user : usuarios) {
-			usuarioEncontrado |= user.getNombre().equals(usuario);
-    	}
-    	return usuarioEncontrado;
-    }
-    
     public List<Alerta> obtenerAlertasNoLeidasDe(String user) {
     	List<Alerta> alertasDelUsuario = new ArrayList<>();
 		for (Alerta alerta : alertas) {
