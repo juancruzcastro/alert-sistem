@@ -26,18 +26,8 @@ public class SistemaAlertas {
     }
     
     public void agregarTemaInteres(String user, String tema) {
-    	boolean usuarioEncontrado = false;
-    	for(Usuario usuario : usuarios) {
-    		usuarioEncontrado |= usuario.getNombre().equals(user);
-			
-			if(usuarioEncontrado) {
-    			usuario.agregarTemaInteres(tema);
-    		}
-    	}
-    	
-    	if(!usuarioEncontrado) {
-    		throw new RuntimeException("El usuario fue encontrado, pero la alerta no corresponde con sus temas de interés.");
-    	}
+    	Usuario usuario = obtenerUsuario(user);
+    	usuario.agregarTemaInteres(tema);
     }
     
     public void enviarAlerta(String tema, String mensaje, String fechaExpiracion, TipoAlerta tipo) {
@@ -46,27 +36,22 @@ public class SistemaAlertas {
     }
     
     public void enviarAlerta(String tema, String mensaje, String fechaExpiracion, TipoAlerta tipo, String usuario) {
-    	boolean usuarioEncontrado = false;
-    	Usuario elUsuarioEs = new Usuario();
-    	for(Usuario user : usuarios) {
-			usuarioEncontrado |= user.getNombre().equals(usuario);
-			
-			if(usuarioEncontrado) {
-				elUsuarioEs = user;
-			}
+    	Usuario user = obtenerUsuario(usuario);
+    	if(!user.getTemasInteres().contains(tema)) {
+    		throw new RuntimeException("El usuario fue encontrado, pero la alerta no corresponde con sus temas de interés.");
     	}
     	
-    	if(usuarioEncontrado) {
-    		Alerta alerta = new Alerta(tema, mensaje, fechaExpiracion, tipo, elUsuarioEs);
-			if(elUsuarioEs.getTemasInteres().contains(tema)) {
-				alertas.add(alerta);
-    			elUsuarioEs.recibirAlerta(alerta);
-			} else {
-				throw new RuntimeException("El usuario fue encontrado, pero la alerta no corresponde con sus temas de interés.");
-			}
-    	} else {
-			throw new RuntimeException("El usuario fue encontrado, pero la alerta no corresponde con sus temas de interés.");
+    	Alerta alerta = new Alerta(tema, mensaje, fechaExpiracion, tipo, user);
+    	alertas.add(alerta);
+    	user.recibirAlerta(alerta);
+    }
+    
+    private boolean elUsuarioEsta(String usuario) {
+    	boolean usuarioEncontrado = false;
+    	for(Usuario user : usuarios) {
+			usuarioEncontrado |= user.getNombre().equals(usuario);
     	}
+    	return usuarioEncontrado;
     }
     
     public List<Alerta> obtenerAlertasNoLeidasDe(String user) {
@@ -74,7 +59,7 @@ public class SistemaAlertas {
 		for (Alerta alerta : alertas) {
             if (alerta.isParaTodos()) {
             	Usuario usuarioEncontrado = new Usuario();
-            	usuarioEncontrado = buscarUsuario(user);
+            	usuarioEncontrado = obtenerUsuario(user);
             	if(usuarioEncontrado == null) {
             		throw new RuntimeException("El usuario no es válido.");
             	} else if(usuarioEncontrado.getTemasInteres().contains(alerta.getTema())) {
@@ -89,13 +74,18 @@ public class SistemaAlertas {
         return alertasDelUsuario;
 	}
     
-    private Usuario buscarUsuario(String usuario) {
+    private Usuario obtenerUsuario(String usuario) {
     	Usuario usuarioEncontrado = null;
     	for(Usuario user : usuarios) {
     		if(user.es(usuario)) {
     			usuarioEncontrado = user;
     		}
     	}
+    	
+    	if(usuarioEncontrado == null) {
+    		throw new RuntimeException("El usuario no fue encontrado.");
+    	}
+    	
     	return usuarioEncontrado;
     }
     
