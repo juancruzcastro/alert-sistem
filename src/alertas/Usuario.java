@@ -19,13 +19,13 @@ public class Usuario {
     
     public void agregarTemaInteres(String tema) {
         temasInteres.add(tema);
+        // Agregar impresión para depuración
+        System.out.println("CLASE USUARIO: Temas de interés de " + nombre + ": " + temasInteres);
     }
     
     public boolean es(String usuario) {
-		if(this.nombre.equals(usuario))
-			return true;
-		return false;
-	}
+        return this.nombre.equals(usuario);
+    }
 
     public void recibirAlerta(Alerta alerta) {
         alertas.add(alerta);
@@ -34,13 +34,17 @@ public class Usuario {
     public String getNombre() {
 		return this.nombre;
 	}
+    
+    public List<String> getTemasInteres(){
+    	return temasInteres;
+    }
 
     public List<Alerta> obtenerAlertasNoLeidas() {
         List<Alerta> noLeidasNoExpiradas = new ArrayList<>();
         for (Alerta alerta : alertas) {
             if (!alerta.isLeida() && !alerta.isExpirada()) {
             	if(alerta.isParaTodos()) {
-            		if(this.getTemasInteres().contains(alerta.getTema())) {
+            		if(this.temasInteres.contains(alerta.getTema())) {
             			noLeidasNoExpiradas.add(alerta);
             		}
             	} else {
@@ -55,10 +59,7 @@ public class Usuario {
     public List<Alerta> getAlertas() {
         return this.alertas;
     }
-
-	public List<String> getTemasInteres() {
-		return this.temasInteres;
-	}
+    
 	/*
 	private void ordenarAlertas(List<Alerta> alertas) {
         Collections.sort(alertas, (a1, a2) -> {
@@ -84,4 +85,15 @@ public class Usuario {
     		}
     	}
     }
+
+	public boolean elTemaEsDeSuInteres(String tema) {
+	    System.out.println("Temas de interés del usuario: " + temasInteres);
+	    System.out.println("Tema de la alerta: " + tema);
+	    
+	    boolean resultado = temasInteres.contains(tema);
+	    
+	    System.out.println("¿El tema es de su interés? " + resultado);
+	    
+	    return resultado;
+	}
 }

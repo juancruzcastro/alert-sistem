@@ -6,18 +6,18 @@ public class Main {
 	public static void main(String[] args) {
         SistemaAlertas sistema = new SistemaAlertas();
 
-        sistema.registrarUsuario("Usuario1");
-        sistema.registrarUsuario("Usuario2");
+        Usuario user1 = sistema.registrarUsuario("Usuario1");
+        Usuario user2 = sistema.registrarUsuario("Usuario2");
 
         sistema.registrarTema("Música");
         sistema.registrarTema("Cumpleaños");
         sistema.registrarTema("Cine");
         
-        sistema.agregarTemaInteres("Usuario1", "Cumpleaños");
-        sistema.agregarTemaInteres("Usuario1", "Cine");
-        sistema.agregarTemaInteres("Usuario2", "Cumpleaños");
-        sistema.agregarTemaInteres("Usuario2", "Cine");
-        sistema.agregarTemaInteres("Usuario2", "Música");
+        user1.agregarTemaInteres("Cumpleaños");
+        user1.agregarTemaInteres("Cine");
+        user2.agregarTemaInteres("Cumpleaños");
+        user2.agregarTemaInteres("Cine");
+        user2.agregarTemaInteres("Música");
         
         sistema.enviarAlerta("Cumpleaños", "¡Es mi cumpleaños!", "10/12/2023 12:00", TipoAlerta.URGENTE, "Usuario1");
         sistema.enviarAlerta("Cine", "¡Sólo por hoy! 25% OFF con MODO", "11/12/2023 12:00", TipoAlerta.URGENTE, "Usuario1");
