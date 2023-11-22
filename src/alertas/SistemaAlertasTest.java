@@ -40,9 +40,11 @@ public class SistemaAlertasTest {
     
     @Test
     public void testEnviarAlertaAUsuario_ok() {
+    	Usuario usuarioo = sistema.registrarUsuario("Usuario1");
+        sistema.agregarTemaInteres("Usuario1", "Cumpleaños");
         Alerta alerta = sistema.enviarAlerta("Cumpleaños", "¡Es mi cumpleaños!", "10/12/2023 12:00", TipoAlerta.URGENTE, "Usuario1");
         assertNotNull(alerta);
-        assertTrue(usuario1.getAlertas().contains(alerta));
+        assertTrue(usuarioo.getAlertas().contains(alerta));
     }
     
     @Test
